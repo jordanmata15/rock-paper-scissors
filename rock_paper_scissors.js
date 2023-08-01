@@ -1,23 +1,18 @@
-const EnumToMove = {
-    0: "ROCK",
-    1: "PAPER",
-    2: "SCISSORS"
-}
-
-const MoveOptions = Object.values(EnumToMove);
+const VALID_MOVES = ["ROCK", "PAPER", "SCISSORS"]
 
 function getPlayerChoice() {
     let playerSelection = null;
-    while (!MoveOptions.includes(playerSelection)) {
-        playerSelection = prompt("Please enter one of the following options:\nROCK, PAPER, or SCISSORS").toUpperCase();
+    while (!VALID_MOVES.includes(playerSelection)) {
+        playerSelection = prompt("Please enter one of the following options:\n" +
+                                    "ROCK, PAPER, or SCISSORS").toUpperCase();
     }
     return playerSelection;
 }
 
 function getComputerChoice() {
-    let numPossibleMoves = MoveOptions.length;
+    let numPossibleMoves = VALID_MOVES.length;
     let choice = Math.ceil(Math.random() * numPossibleMoves) - 1;
-    return EnumToMove[choice];
+    return VALID_MOVES[choice];
 }
 
 function chooseWinner(playerSelection, computerSelection) {
