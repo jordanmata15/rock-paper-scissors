@@ -1,4 +1,10 @@
 const VALID_MOVES = ["ROCK", "PAPER", "SCISSORS"]
+const PLAYERS = {
+    COMPUTER: 0,
+    PLAYER: 1
+};
+
+let score = [0, 0];
 
 function getComputerChoice() {
     let numPossibleMoves = VALID_MOVES.length;
@@ -18,35 +24,39 @@ function chooseWinner(playerSelection, computerSelection) {
     return "COMPUTER WON";
 }
 
-function createResultsDiv() {
-    resultsDiv = document.createElement('div');
-    resultsDiv.classList.add('results');
+function createScoreBoardDiv() {
+    let scoreboard = document.createElement('div');
+    scoreboard.classList.add('scoreboard');
 
-    playerDiv = document.createElement('div');
-    computerDiv = document.createElement('div');
-    outcomeDiv = document.createElement('div');
+    let playerDiv = document.createElement('div');
+    let computerDiv = document.createElement('div');
+    let outcomeDiv = document.createElement('div');
     
     playerDiv.classList.add('playerChoice');
     computerDiv.classList.add('computerChoice');
     outcomeDiv.classList.add('outcome');
 
-    resultsDiv.appendChild(playerDiv);
-    resultsDiv.appendChild(computerDiv);
-    resultsDiv.appendChild(outcomeDiv);
+    scoreboard.appendChild(playerDiv);
+    scoreboard.appendChild(computerDiv);
+    scoreboard.appendChild(outcomeDiv);
 
-    Array.from(resultsDiv.children).forEach(div => div.style["white-space"] = "pre-wrap");
-    return resultsDiv;
+    Array.from(scoreboard.children).forEach(div => div.style["white-space"] = "pre-wrap");
+    return scoreboard;
 }
 
 function displayResults(playerSelection, computerSelection, result) {
-    let resultsDiv = document.querySelector('.results');
-    if (!resultsDiv) {
-        resultsDiv = createResultsDiv();
-        document.querySelector('.game').appendChild(resultsDiv);
+    let scoreboard = document.querySelector('.scoreboard');
+    if (!scoreboard) {
+        scoreboard = createScoreBoardDiv();
+        document.querySelector('.game').appendChild(scoreboard);
     }
-    resultsDiv.querySelector('.playerChoice').textContent = "Player choice:\t\t" + playerSelection;
-    resultsDiv.querySelector('.computerChoice').textContent = "Computer choice:\t" + computerSelection;
-    resultsDiv.querySelector('.outcome').textContent = "Result:\t\t\t" + result;
+    scoreboard.querySelector('.playerChoice').textContent = "Player choice:\t\t" + playerSelection;
+    scoreboard.querySelector('.computerChoice').textContent = "Computer choice:\t" + computerSelection;
+    scoreboard.querySelector('.outcome').textContent = "Result:\t\t\t" + result;
+}
+
+function updateScoreBoard() {
+
 }
 
 function playRound(playerSelection) {
