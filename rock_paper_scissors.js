@@ -1,14 +1,5 @@
 const VALID_MOVES = ["ROCK", "PAPER", "SCISSORS"]
 
-function getPlayerChoice() {
-    let playerSelection = null;
-    while (!VALID_MOVES.includes(playerSelection)) {
-        playerSelection = prompt("Please enter one of the following options:\n" +
-                                    "ROCK, PAPER, or SCISSORS").toUpperCase();
-    }
-    return playerSelection;
-}
-
 function getComputerChoice() {
     let numPossibleMoves = VALID_MOVES.length;
     let choice = Math.ceil(Math.random() * numPossibleMoves) - 1;
@@ -27,23 +18,45 @@ function chooseWinner(playerSelection, computerSelection) {
     return "COMPUTER WON";
 }
 
-function printResult(playerSelection, computerSelection, result) {
-    console.log("Player choice:\t\t" + playerSelection +
-        "\nComputer choice:\t" + computerSelection +
-        "\nResult:\t\t\t\t" + result);
+function createResultsDiv() {
+    resultsDiv = document.createElement('div');
+    resultsDiv.classList.add('results');
+
+    playerDiv = document.createElement('div');
+    computerDiv = document.createElement('div');
+    outcomeDiv = document.createElement('div');
+    
+    playerDiv.classList.add('playerChoice');
+    computerDiv.classList.add('computerChoice');
+    outcomeDiv.classList.add('outcome');
+
+    resultsDiv.appendChild(playerDiv);
+    resultsDiv.appendChild(computerDiv);
+    resultsDiv.appendChild(outcomeDiv);
+
+    Array.from(resultsDiv.children).forEach(div => div.style["white-space"] = "pre-wrap");
+    return resultsDiv;
 }
 
-function playRound() {
-    let playerSelection = getPlayerChoice();
+function displayResults(playerSelection, computerSelection, result) {
+    let resultsDiv = document.querySelector('.results');
+    if (!resultsDiv) {
+        resultsDiv = createResultsDiv();
+        document.querySelector('.game').appendChild(resultsDiv);
+    }
+    resultsDiv.querySelector('.playerChoice').textContent = "Player choice:\t\t" + playerSelection;
+    resultsDiv.querySelector('.computerChoice').textContent = "Computer choice:\t" + computerSelection;
+    resultsDiv.querySelector('.outcome').textContent = "Result:\t\t\t" + result;
+}
+
+function playRound(playerSelection) {
     let computerSelection = getComputerChoice();
     let result = chooseWinner(playerSelection, computerSelection);
-    printResult(playerSelection, computerSelection, result);
+    displayResults(playerSelection, computerSelection, result)
 }
 
-function game() {
-    for (let i = 0; i < 5; ++i) {
-        playRound();
-    }
-}
-
-game();
+const buttons = document.querySelectorAll('.choices > button');
+buttons.forEach(button => 
+    button.addEventListener('click', () =>
+        playRound((button.textContent).toUpperCase())
+));
