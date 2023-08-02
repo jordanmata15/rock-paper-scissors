@@ -4,17 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link src="./styles.css">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="./styles.css">
     <script src="./rock_paper_scissors.js" defer></script>
 </head>
 
 <body>
     <div class="game">
+
         <div class="choices">
             <button class="rock">ROCK</button>
             <button class="paper">PAPER</button>
             <button class="scissors">SCISSORS</button>
+        </div>
+
+        <div class="scoreboard" style="visibility: hidden;">
+            <div class="player">
+                <div>Player choice:</div>
+                <div class="choice"></div>
+            </div>
+            <div class="computer">
+                <div>Computer choice:</div>
+                <div class="choice"></div>
+            </div>
+            <div class="result">
+                <div>Result:</div>
+                <div class="outcome"></div>
+            </div>
+            <div class="player">
+                <div class="score-description">Player Wins</div>
+                <div class="score-counter">0</div>
+            </div>
+            <div class="computer">
+                <div class="score-description">Computer Wins</div>
+                <div class="score-counter">0</div>
+            </div>
+            <div class="tie">
+                <div class="score-description">Ties</div>
+                <div class="score-counter">0</div>
+            </div>
+
         </div>
     </div>
 </body>

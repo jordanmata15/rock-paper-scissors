@@ -1,10 +1,9 @@
-const VALID_MOVES = ["ROCK", "PAPER", "SCISSORS"]
-const PLAYERS = {
-    COMPUTER: 0,
-    PLAYER: 1
-};
-
-let score = [0, 0];
+const VALID_MOVES = ["ROCK", "PAPER", "SCISSORS"];
+const OUTCOME = {
+    COMPUTER_WON: "COMPUTER WON",
+    PLAYER_WON: "PLAYER WON",
+    TIE: "TIE"
+}
 
 function getComputerChoice() {
     let numPossibleMoves = VALID_MOVES.length;
@@ -14,59 +13,58 @@ function getComputerChoice() {
 
 function chooseWinner(playerSelection, computerSelection) {
     if (playerSelection === computerSelection) {
-        return "TIE";
+        return OUTCOME.TIE;
     }
     if ((playerSelection === "ROCK" && computerSelection === "SCISSORS") ||
         (playerSelection === "PAPER" && computerSelection === "ROCK") ||
         (playerSelection === "SCISSORS" && computerSelection === "PAPER")) {
-        return "PLAYER WON";
+        return OUTCOME.PLAYER_WON;
     }
-    return "COMPUTER WON";
+    return OUTCOME.COMPUTER_WON;
 }
 
-function createScoreBoardDiv() {
-    let scoreboard = document.createElement('div');
-    scoreboard.classList.add('scoreboard');
 
-    let playerDiv = document.createElement('div');
-    let computerDiv = document.createElement('div');
-    let outcomeDiv = document.createElement('div');
+function updateScoreBoard(playerSelection, computerSelection, result) {
+    let scoreboardDiv = document.querySelector(".scoreboard");
+    // hide scoreboard originally since it's missing any scores
+    if (scoreboardDiv.style.visibility === "hidden") {
+        scoreboardDiv.style.visibility = "visible";
+    }
+
+    scoreboardDiv.querySelector(".player > .choice").textContent = playerSelection;
+    scoreboardDiv.querySelector(".computer > .choice").textContent = computerSelection;
+    scoreboardDiv.querySelector(".result > .outcome").textContent = result;
+
+    // make all text on the scoreboard black again
+    Array.from(scoreboardDiv.children).forEach(scoreBoardItem => {
+        scoreBoardItem.style.color = 'black';
+    });
     
-    playerDiv.classList.add('playerChoice');
-    computerDiv.classList.add('computerChoice');
-    outcomeDiv.classList.add('outcome');
 
-    scoreboard.appendChild(playerDiv);
-    scoreboard.appendChild(computerDiv);
-    scoreboard.appendChild(outcomeDiv);
-
-    Array.from(scoreboard.children).forEach(div => div.style["white-space"] = "pre-wrap");
-    return scoreboard;
-}
-
-function displayResults(playerSelection, computerSelection, result) {
-    let scoreboard = document.querySelector('.scoreboard');
-    if (!scoreboard) {
-        scoreboard = createScoreBoardDiv();
-        document.querySelector('.game').appendChild(scoreboard);
+    if (result === OUTCOME.PLAYER_WON) {
+        // make the winner's text green
+        scoreboardDiv.querySelector(".player").style.color = '#23de55';
+        // update score
+        let playerWinCount = scoreboardDiv.querySelector(".player > .score-counter").textContent;
+        scoreboardDiv.querySelector(".player > .score-counter").textContent = +playerWinCount + 1;
+    } else if (result === OUTCOME.COMPUTER_WON) {
+        scoreboardDiv.querySelector(".computer").style.color = '#23de55';
+        let computerWinCount = scoreboardDiv.querySelector(".computer > .score-counter").textContent;
+        scoreboardDiv.querySelector(".computer > .score-counter").textContent = +computerWinCount + 1;
+    } else {
+        let currentTieCount = scoreboardDiv.querySelector(".tie > .score-counter").textContent;
+        scoreboardDiv.querySelector(".tie > .score-counter").textContent = +currentTieCount + 1;
     }
-    scoreboard.querySelector('.playerChoice').textContent = "Player choice:\t\t" + playerSelection;
-    scoreboard.querySelector('.computerChoice').textContent = "Computer choice:\t" + computerSelection;
-    scoreboard.querySelector('.outcome').textContent = "Result:\t\t\t" + result;
-}
-
-function updateScoreBoard() {
-
 }
 
 function playRound(playerSelection) {
     let computerSelection = getComputerChoice();
     let result = chooseWinner(playerSelection, computerSelection);
-    displayResults(playerSelection, computerSelection, result)
+    updateScoreBoard(playerSelection, computerSelection, result)
 }
 
-const buttons = document.querySelectorAll('.choices > button');
+const buttons = document.querySelectorAll(".choices > button");
 buttons.forEach(button => 
-    button.addEventListener('click', () =>
+    button.addEventListener("click", () =>
         playRound((button.textContent).toUpperCase())
 ));
