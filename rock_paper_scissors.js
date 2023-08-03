@@ -1,7 +1,7 @@
 const VALID_MOVES = ["ROCK", "PAPER", "SCISSORS"];
 const OUTCOME = {
     COMPUTER_WON: "COMPUTER WON",
-    PLAYER_WON: "PLAYER WON",
+    PLAYER_WON: "YOU WON",
     TIE: "TIE"
 }
 const GAMES_UNTIL_VICTORY = 5;
@@ -87,12 +87,12 @@ function displayGameOver() {
     // display a nice message and prompt to play again
     let winner = "";
     if (playerScoreDiv.textContent >= GAMES_UNTIL_VICTORY) {
-        winner = "PLAYER";
+        winner = "YOU";
     } else {
         winner = "COMPUTER";
     }
-    gameOverDiv.textContent = winner + " is the winner after winning " + 
-                                GAMES_UNTIL_VICTORY + " times!"
+    gameOverDiv.textContent = winner + " won after " + 
+                                GAMES_UNTIL_VICTORY + " victories!"
     
     let startOverbutton = document.createElement('button');
     startOverbutton.textContent = "Play again?";
