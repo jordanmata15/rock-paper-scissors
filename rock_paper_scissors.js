@@ -7,6 +7,8 @@ const OUTCOME = {
 const GAMES_UNTIL_VICTORY = 5;
 const VICTORY_GREEN = '#23de55';
 
+const gameDiv = document.querySelector(".game");
+const moveButtons = document.querySelectorAll(".choices > button");
 const scoreBoardDiv = document.querySelector(".scoreboard");
 const playerChoiceDiv = scoreBoardDiv.querySelector(".player > .choice");
 const computerChoiceDiv = scoreBoardDiv.querySelector(".computer > .choice");
@@ -62,14 +64,53 @@ function updateScoreBoard(playerSelection, computerSelection, result) {
     }
 }
 
+function isGameOver() {
+    return playerScoreDiv.textContent >= GAMES_UNTIL_VICTORY || 
+            computerScoreDiv.textContent >= GAMES_UNTIL_VICTORY;
+}
+
+function displayGameOver() {
+    // remove scoreboard and disable move buttons
+    let gameOverDiv = scoreBoardDiv.cloneNode(false);
+    gameOverDiv.setAttribute("style", "display: flex;" +
+                                        "flex-direction: column;" +
+                                        "align-items: center;" + 
+                                        "text-align: center;" + 
+                                        "justify-content: space-around;");
+    gameDiv.removeChild(scoreBoardDiv);
+    gameDiv.appendChild(gameOverDiv);
+    
+    moveButtons.forEach(button => {
+        button.disabled = true;
+    });
+
+    // display a nice message and prompt to play again
+    let winner = "";
+    if (playerScoreDiv.textContent >= GAMES_UNTIL_VICTORY) {
+        winner = "PLAYER";
+    } else {
+        winner = "COMPUTER";
+    }
+    gameOverDiv.textContent = winner + " is the winner after winning " + 
+                                GAMES_UNTIL_VICTORY + " times!"
+    
+    let startOverbutton = document.createElement('button');
+    startOverbutton.textContent = "Play again?";
+    startOverbutton.addEventListener('click', () => window.location.reload());
+    gameOverDiv.appendChild(startOverbutton);
+}
+
 function playRound(playerSelection) {
     let computerSelection = getComputerChoice();
     let result = chooseWinner(playerSelection, computerSelection);
     updateScoreBoard(playerSelection, computerSelection, result);
+    if (isGameOver()) {
+        displayGameOver();
+    }
 }
 
-const buttons = document.querySelectorAll(".choices > button");
-buttons.forEach(button =>
+moveButtons.forEach(button =>
     button.addEventListener("click", () =>
         playRound((button.textContent).toUpperCase())
-    ));
+    )
+);
