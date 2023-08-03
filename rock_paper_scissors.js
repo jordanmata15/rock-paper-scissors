@@ -4,6 +4,18 @@ const OUTCOME = {
     PLAYER_WON: "PLAYER WON",
     TIE: "TIE"
 }
+const GAMES_UNTIL_VICTORY = 5;
+const VICTORY_GREEN = '#23de55';
+
+const scoreBoardDiv = document.querySelector(".scoreboard");
+const playerChoiceDiv = scoreBoardDiv.querySelector(".player > .choice");
+const computerChoiceDiv = scoreBoardDiv.querySelector(".computer > .choice");
+const roundOutcomeDiv = scoreBoardDiv.querySelector(".result > .outcome");
+const playerScoreDiv = scoreBoardDiv.querySelector(".player > .score-counter");
+const computerScoreDiv = scoreBoardDiv.querySelector(".computer > .score-counter");
+const tieScoreDiv = scoreBoardDiv.querySelector(".tie > .score-counter");
+const playerDivList = Array.from(scoreBoardDiv.querySelectorAll(".player"));
+const computerDivList = Array.from(scoreBoardDiv.querySelectorAll(".computer"));
 
 function getComputerChoice() {
     let numPossibleMoves = VALID_MOVES.length;
@@ -25,46 +37,39 @@ function chooseWinner(playerSelection, computerSelection) {
 
 
 function updateScoreBoard(playerSelection, computerSelection, result) {
-    let scoreboardDiv = document.querySelector(".scoreboard");
     // hide scoreboard originally since it's missing any scores
-    if (scoreboardDiv.style.visibility === "hidden") {
-        scoreboardDiv.style.visibility = "visible";
+    if (scoreBoardDiv.style.visibility === "hidden") {
+        scoreBoardDiv.style.visibility = "visible";
     }
 
-    scoreboardDiv.querySelector(".player > .choice").textContent = playerSelection;
-    scoreboardDiv.querySelector(".computer > .choice").textContent = computerSelection;
-    scoreboardDiv.querySelector(".result > .outcome").textContent = result;
+    playerChoiceDiv.textContent = playerSelection;
+    computerChoiceDiv.textContent = computerSelection;
+    roundOutcomeDiv.textContent = result;
 
     // make all text on the scoreboard black again
-    Array.from(scoreboardDiv.children).forEach(scoreBoardItem => {
+    Array.from(scoreBoardDiv.children).forEach(scoreBoardItem => {
         scoreBoardItem.style.color = 'black';
     });
-    
 
     if (result === OUTCOME.PLAYER_WON) {
-        // make the winner's text green
-        scoreboardDiv.querySelector(".player").style.color = '#23de55';
-        // update score
-        let playerWinCount = scoreboardDiv.querySelector(".player > .score-counter").textContent;
-        scoreboardDiv.querySelector(".player > .score-counter").textContent = +playerWinCount + 1;
+        playerDivList.forEach(divItem => divItem.style.color = VICTORY_GREEN);
+        playerScoreDiv.textContent = +(playerScoreDiv.textContent) + 1;
     } else if (result === OUTCOME.COMPUTER_WON) {
-        scoreboardDiv.querySelector(".computer").style.color = '#23de55';
-        let computerWinCount = scoreboardDiv.querySelector(".computer > .score-counter").textContent;
-        scoreboardDiv.querySelector(".computer > .score-counter").textContent = +computerWinCount + 1;
+        computerDivList.forEach(divItem => divItem.style.color = VICTORY_GREEN);
+        computerScoreDiv.textContent = +(computerScoreDiv.textContent) + 1;
     } else {
-        let currentTieCount = scoreboardDiv.querySelector(".tie > .score-counter").textContent;
-        scoreboardDiv.querySelector(".tie > .score-counter").textContent = +currentTieCount + 1;
+        tieScoreDiv.textContent = +(tieScoreDiv.textContent) + 1;
     }
 }
 
 function playRound(playerSelection) {
     let computerSelection = getComputerChoice();
     let result = chooseWinner(playerSelection, computerSelection);
-    updateScoreBoard(playerSelection, computerSelection, result)
+    updateScoreBoard(playerSelection, computerSelection, result);
 }
 
 const buttons = document.querySelectorAll(".choices > button");
-buttons.forEach(button => 
+buttons.forEach(button =>
     button.addEventListener("click", () =>
         playRound((button.textContent).toUpperCase())
-));
+    ));
